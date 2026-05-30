@@ -67,6 +67,34 @@ Mensaje sugerido:
 🚨 SOS Rider Colombia: emergencia de ALIAS. Ubicación: https://www.google.com/maps?q=LAT,LON Precisión GPS: ±ACCURACY m
 ```
 
+
+## Google Apps Script compatible con JSONP
+
+Para que el endpoint de Google Apps Script acepte la llamada JSONP desde la app, usa este `doGet`:
+
+```javascript
+function doGet(e) {
+  try {
+    var payload = {
+      alias:    (e.parameter.alias    || "").toString().trim().toLowerCase(),
+      lat:      parseFloat(e.parameter.lat)  || 0,
+      lon:      parseFloat(e.parameter.lon)  || 0,
+      accuracy: parseFloat(e.parameter.accuracy) || null,
+    };
+    var result = procesarAlerta(payload);
+    var callback = e.parameter.callback;
+    if (callback) {
+      return ContentService
+        .createTextOutput(callback + '(' + result.getContent() + ')')
+        .setMimeType(ContentService.MimeType.JAVASCRIPT);
+    }
+    return result;
+  } catch(err) {
+    return jsonResponse({ ok: false, error: err.message });
+  }
+}
+```
+
 ## Estructura del repositorio
 
 ```text
