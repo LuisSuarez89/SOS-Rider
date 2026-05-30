@@ -415,10 +415,18 @@
     }
 
     function sendAlert() {
-      const url = `https://script.google.com/macros/s/AKfycbyL_KxzatZIGboh8DKRWG9CCI94ONHc85mX-B9Bic8YLcAni9cW6Ldc2s16_ae4dADU-A/exec?alias=${alias}&lat=${lat}&lon=${lon}&accuracy=${accuracy}`;
-      fetch(url, { method: 'GET', mode: 'no-cors' })
-        .then(() => showSuccessScreen())
-        .catch(() => showSuccessScreen());
+      const url = `https://script.google.com/macros/s/AKfycbyL_KxzatZIGboh8DKRWG9CCI94ONHc85mX-B9Bic8YLcAni9cW6Ldc2s16_ae4dADU-A/exec?alias=${encodeURIComponent(alias)}&lat=${lat}&lon=${lon}&accuracy=${accuracy}`;
+
+      const script = document.createElement('script');
+      script.src = url + '&callback=onAlertSent';
+      document.body.appendChild(script);
+
+      // Timeout fallback: if no response in 10s, show success anyway
+      setTimeout(() => showSuccessScreen(), 10000);
+    }
+
+    function onAlertSent(data) {
+      showSuccessScreen();
     }
 
     openConfirmButton.addEventListener('click', () => modal.classList.add('is-active'));
