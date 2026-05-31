@@ -16,7 +16,7 @@ La aplicación no usa frameworks, dependencias ni proceso de compilación: todo 
 
 Registra cada piloto en el formulario de Google configurado para el proyecto:
 
-[Registrar rider en Google Forms](https://forms.google.com/)
+[Registro SOS Rider](https://forms.gle/eVotSEsrQuvvetvJ6)
 
 Incluye como mínimo:
 
@@ -24,8 +24,6 @@ Incluye como mínimo:
 - Nombre del piloto.
 - Contactos de emergencia.
 - Números de WhatsApp con indicativo de país.
-
-> Reemplaza el enlace anterior por el URL real de tu formulario de registro de SOS Rider Colombia.
 
 ## Generar un QR para un rider
 
