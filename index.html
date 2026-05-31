@@ -246,6 +246,287 @@
       transform: translateY(-1px);
     }
 
+    #screen-landing {
+      align-items: stretch;
+      color: var(--text);
+      justify-content: flex-start;
+      margin-left: calc(50% - 50vw);
+      min-height: 100dvh;
+      text-align: center;
+      width: 100vw;
+    }
+
+    #screen-landing.is-active {
+      display: flex;
+    }
+
+    .landing-wrap {
+      background: linear-gradient(180deg, rgba(26, 26, 46, 0.96) 0%, var(--bg) 46%, #111126 100%);
+      min-height: 100dvh;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .landing-section {
+      padding: 78px clamp(20px, 5vw, 64px);
+    }
+
+    .landing-section-inner {
+      margin: 0 auto;
+      max-width: 1080px;
+      width: 100%;
+    }
+
+    .landing-hero {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      min-height: 100dvh;
+      padding: 56px 24px;
+      position: relative;
+    }
+
+    .hero-content {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-emoji {
+      font-size: clamp(5.5rem, 19vw, 10rem);
+      line-height: 1;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .hero-emoji::before {
+      animation: heroPulse 3s ease-in-out infinite;
+      background: radial-gradient(circle, rgba(231, 76, 60, 0.32) 0%, rgba(231, 76, 60, 0.12) 42%, rgba(231, 76, 60, 0) 70%);
+      border-radius: 50%;
+      content: '';
+      height: 1.8em;
+      left: 50%;
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 1.8em;
+      z-index: -1;
+    }
+
+    .landing-title {
+      font-size: clamp(2.4rem, 9vw, 5rem);
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+
+    .landing-tagline {
+      color: var(--text);
+      font-size: clamp(1.25rem, 4vw, 2rem);
+      font-weight: 700;
+      margin-bottom: 34px;
+    }
+
+    .landing-cta,
+    .register-btn {
+      background: var(--red);
+      border: 0;
+      border-radius: 999px;
+      color: var(--text);
+      cursor: pointer;
+      display: inline-flex;
+      font-weight: 900;
+      padding: 16px 28px;
+      text-decoration: none;
+      transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
+    }
+
+    .landing-cta:hover,
+    .landing-cta:focus-visible,
+    .register-btn:hover,
+    .register-btn:focus-visible {
+      background: var(--red-dark);
+      box-shadow: 0 12px 28px rgba(231, 76, 60, 0.26);
+      transform: translateY(-2px);
+    }
+
+    .landing-heading {
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      margin-bottom: 34px;
+    }
+
+    .landing-grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .landing-card {
+      background: #16213e;
+      border: 1px solid #e74c3c22;
+      border-radius: 12px;
+      box-shadow: 0 18px 46px rgba(0, 0, 0, 0.22);
+      padding: 26px 22px;
+      transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .landing-card:hover,
+    .landing-card:focus-within {
+      border-color: rgba(231, 76, 60, 0.42);
+      box-shadow: 0 24px 56px rgba(0, 0, 0, 0.32);
+      transform: translateY(-4px);
+    }
+
+    .landing-card-icon {
+      display: block;
+      font-size: 2.4rem;
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+
+    .landing-card h3 {
+      font-size: 1.35rem;
+      margin: 0 0 10px;
+    }
+
+    .landing-card p {
+      margin-bottom: 0;
+    }
+
+    .demo-section {
+      background: #0f1021;
+    }
+
+    .demo-flow {
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      justify-content: center;
+    }
+
+    .phone-mockup {
+      align-items: center;
+      background: #141429;
+      border: 2px solid var(--red);
+      border-radius: 24px;
+      box-shadow: 0 22px 44px rgba(0, 0, 0, 0.35);
+      display: flex;
+      flex-direction: column;
+      height: 140px;
+      justify-content: center;
+      padding: 14px;
+      position: relative;
+      width: 80px;
+    }
+
+    .phone-mockup::before {
+      background: rgba(255, 255, 255, 0.45);
+      border-radius: 999px;
+      content: '';
+      height: 3px;
+      left: 50%;
+      position: absolute;
+      top: 9px;
+      transform: translateX(-50%);
+      width: 24px;
+    }
+
+    .phone-screen {
+      align-items: center;
+      background: #1a1a2e;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      height: 100%;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .phone-dot {
+      background: var(--red);
+      border-radius: 50%;
+      box-shadow: 0 0 18px currentColor;
+      height: 16px;
+      width: 16px;
+    }
+
+    .phone-dot.qr { background: #ffffff; }
+    .phone-dot.sos { background: var(--red); }
+    .phone-dot.sent { background: var(--green); }
+
+    .phone-label {
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .demo-arrow {
+      animation: arrowPulse 1.4s ease-in-out infinite;
+      color: var(--red);
+      font-size: 2.4rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .stats-section {
+      background: #8B0000;
+    }
+
+    .stat-card {
+      background: rgba(0, 0, 0, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 18px;
+      padding: 28px 18px;
+    }
+
+    .stat-number {
+      color: var(--text);
+      display: block;
+      font-size: clamp(2.1rem, 8vw, 3.4rem);
+      font-weight: 950;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .stat-label {
+      color: rgba(255, 255, 255, 0.86);
+      margin-bottom: 0;
+    }
+
+    .register-section {
+      background: linear-gradient(180deg, var(--bg) 0%, #111126 100%);
+    }
+
+    .register-panel {
+      background: #16213e;
+      border: 1px solid #e74c3c22;
+      border-radius: 28px;
+      box-shadow: 0 24px 70px var(--shadow);
+      margin: 0 auto;
+      max-width: 760px;
+      padding: clamp(30px, 6vw, 52px);
+    }
+
+    .landing-footer {
+      background: #101020;
+      border-top: 1px solid rgba(231, 76, 60, 0.22);
+      padding: 30px 20px;
+    }
+
+    .landing-footer p {
+      margin-bottom: 6px;
+    }
+
+    .landing-footer small {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
     .modal-overlay {
       align-items: center;
       background: rgba(0, 0, 0, 0.76);
@@ -288,6 +569,16 @@
       color: var(--text);
     }
 
+    @keyframes heroPulse {
+      0%, 100% { opacity: 0.56; transform: translate(-50%, -50%) scale(0.9); }
+      50% { opacity: 1; transform: translate(-50%, -50%) scale(1.12); }
+    }
+
+    @keyframes arrowPulse {
+      0%, 100% { opacity: 0.35; transform: scale(0.92); }
+      50% { opacity: 1; transform: scale(1.08); }
+    }
+
     @keyframes pulse {
       0%   { box-shadow: 0 0 0 0 rgba(231,76,60,0.7); }
       70%  { box-shadow: 0 0 0 30px rgba(231,76,60,0); }
@@ -296,6 +587,21 @@
 
     @keyframes spin {
       to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 560px) {
+      .demo-flow {
+        flex-direction: column;
+      }
+
+      .demo-arrow {
+        animation-name: arrowPulseMobile;
+      }
+
+      @keyframes arrowPulseMobile {
+        0%, 100% { opacity: 0.35; transform: rotate(90deg) scale(0.92); }
+        50% { opacity: 1; transform: rotate(90deg) scale(1.08); }
+      }
     }
 
     @media (min-width: 460px) {
@@ -311,6 +617,129 @@
 </head>
 <body>
   <main class="app" aria-live="polite">
+
+    <section id="screen-landing" class="screen">
+      <div class="landing-wrap">
+        <section class="landing-hero" aria-labelledby="landing-title">
+          <div class="hero-content">
+            <div class="hero-emoji" aria-hidden="true">🏍️</div>
+            <h1 id="landing-title" class="landing-title">SOS Rider Colombia</h1>
+            <p class="landing-tagline">“Tu QR puede salvar tu vida”</p>
+            <button id="landing-cta" class="landing-cta" type="button">Quiero mi QR</button>
+          </div>
+        </section>
+
+        <section class="landing-section" aria-labelledby="how-title">
+          <div class="landing-section-inner">
+            <h2 id="how-title" class="landing-heading">¿Cómo funciona?</h2>
+            <div class="landing-grid">
+              <article class="landing-card">
+                <span class="landing-card-icon" aria-hidden="true">🔍</span>
+                <h3>Paso 1</h3>
+                <p>Alguien escanea tu QR.</p>
+              </article>
+              <article class="landing-card">
+                <span class="landing-card-icon" aria-hidden="true">📡</span>
+                <h3>Paso 2</h3>
+                <p>El QR abre una página con GPS.</p>
+              </article>
+              <article class="landing-card">
+                <span class="landing-card-icon" aria-hidden="true">🚨</span>
+                <h3>Paso 3</h3>
+                <p>Tus contactos reciben alerta por WhatsApp, SMS y email.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="landing-section" aria-labelledby="benefits-title">
+          <div class="landing-section-inner">
+            <h2 id="benefits-title" class="landing-heading">Beneficios</h2>
+            <div class="landing-grid">
+              <article class="landing-card">
+                <span class="landing-card-icon" aria-hidden="true">🆔</span>
+                <h3>Tu identidad</h3>
+                <p>Nombre, alias, tipo de sangre y alergias visibles al rescatista.</p>
+              </article>
+              <article class="landing-card">
+                <span class="landing-card-icon" aria-hidden="true">📍</span>
+                <h3>GPS automático</h3>
+                <p>Coordenadas precisas en segundos.</p>
+              </article>
+              <article class="landing-card">
+                <span class="landing-card-icon" aria-hidden="true">👨‍👩‍👧</span>
+                <h3>Red de contactos</h3>
+                <p>Hasta 3 personas notificadas al instante.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="landing-section demo-section" aria-labelledby="demo-title">
+          <div class="landing-section-inner">
+            <h2 id="demo-title" class="landing-heading">Demo de alerta</h2>
+            <div class="demo-flow" aria-label="Flujo de QR físico a pantalla SOS y alerta enviada">
+              <div class="phone-mockup" aria-label="QR físico">
+                <div class="phone-screen">
+                  <span class="phone-dot qr" aria-hidden="true"></span>
+                  <span class="phone-label">QR físico</span>
+                </div>
+              </div>
+              <div class="demo-arrow" aria-hidden="true">→</div>
+              <div class="phone-mockup" aria-label="Pantalla SOS">
+                <div class="phone-screen">
+                  <span class="phone-dot sos" aria-hidden="true"></span>
+                  <span class="phone-label">SOS</span>
+                </div>
+              </div>
+              <div class="demo-arrow" aria-hidden="true">→</div>
+              <div class="phone-mockup" aria-label="Alerta enviada">
+                <div class="phone-screen">
+                  <span class="phone-dot sent" aria-hidden="true"></span>
+                  <span class="phone-label">Enviada</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="landing-stats" class="landing-section stats-section" aria-labelledby="stats-title">
+          <div class="landing-section-inner">
+            <h2 id="stats-title" class="landing-heading">Respuesta rápida</h2>
+            <div class="landing-grid">
+              <div class="stat-card">
+                <span class="stat-number"><span class="stat-prefix">&lt; </span><span class="count-up" data-target="10">0</span><span class="stat-suffix"> seg</span></span>
+                <p class="stat-label">Tiempo de respuesta</p>
+              </div>
+              <div class="stat-card">
+                <span class="stat-number"><span class="count-up" data-target="3">0</span><span class="stat-suffix"> contactos</span></span>
+                <p class="stat-label">Notificados simultáneamente</p>
+              </div>
+              <div class="stat-card">
+                <span class="stat-number"><span class="count-up" data-target="100">0</span><span class="stat-suffix">% gratis</span></span>
+                <p class="stat-label">Sin apps, sin registro</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="section-register" class="landing-section register-section" aria-labelledby="register-title">
+          <div class="landing-section-inner">
+            <div class="register-panel">
+              <h2 id="register-title" class="landing-heading">Registra tu QR ahora</h2>
+              <p>Completa el formulario, recibe tu QR personalizado y llévalo en tu casco o chaleco.</p>
+              <a class="register-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdummy/viewform" target="_blank" rel="noopener noreferrer">Ir al formulario de registro →</a>
+            </div>
+          </div>
+        </section>
+
+        <footer class="landing-footer">
+          <p>SOS Rider Colombia © 2026</p>
+          <small>“Sistema de emergencia para motociclistas”</small>
+        </footer>
+      </div>
+    </section>
+
     <section id="screen-no-alias" class="screen">
       <div class="card">
         <div class="error-icon" aria-hidden="true">✕</div>
@@ -369,12 +798,7 @@
     let lon;
     let accuracy;
 
-    const screens = {
-      noAlias: document.getElementById('screen-no-alias'),
-      gps: document.getElementById('screen-gps'),
-      main: document.getElementById('screen-main'),
-      success: document.getElementById('screen-success')
-    };
+    const screens = document.querySelectorAll('.screen');
 
     const modal = document.getElementById('modal-confirm');
     const aliasValue = document.getElementById('alias-value');
@@ -386,23 +810,27 @@
     const openConfirmButton = document.getElementById('open-confirm');
     const cancelAlertButton = document.getElementById('cancel-alert');
     const sendAlertButton = document.getElementById('send-alert');
+    const landingCtaButton = document.getElementById('landing-cta');
+    const registerSection = document.getElementById('section-register');
+    const statsSection = document.getElementById('landing-stats');
+    const countUpElements = document.querySelectorAll('.count-up');
 
-    function showScreen(screenName) {
-      Object.values(screens).forEach((screen) => screen.classList.remove('is-active'));
-      screens[screenName].classList.add('is-active');
+    function showScreen(screenId) {
+      screens.forEach((screen) => screen.classList.remove('is-active'));
+      document.getElementById(screenId).classList.add('is-active');
     }
 
     function showMainScreen() {
       aliasValue.textContent = alias;
       accuracyValue.textContent = `Precisión GPS: ±${Math.round(accuracy)}m`;
-      showScreen('main');
+      showScreen('screen-main');
     }
 
     function showGpsError(err) {
       const detail = err && err.message ? ` ${err.message}` : '';
       gpsTitle.textContent = 'No fue posible obtener la ubicación GPS';
       gpsMessage.textContent = `Revisa los permisos de ubicación y vuelve a abrir el QR.${detail}`;
-      showScreen('gps');
+      showScreen('screen-gps');
     }
 
     function showSuccessScreen() {
@@ -411,7 +839,7 @@
       const formattedLon = Number(lon).toFixed(6);
       coordinates.textContent = `📍 ${formattedLat}, ${formattedLon}`;
       mapsLink.href = `https://www.google.com/maps?q=${formattedLat},${formattedLon}`;
-      showScreen('success');
+      showScreen('screen-success');
     }
 
     function sendAlert() {
@@ -429,16 +857,13 @@
       showSuccessScreen();
     }
 
-    openConfirmButton.addEventListener('click', () => modal.classList.add('is-active'));
-    cancelAlertButton.addEventListener('click', () => modal.classList.remove('is-active'));
-    sendAlertButton.addEventListener('click', sendAlert);
 
-    if (!alias) {
-      showScreen('noAlias');
-    } else if (!navigator.geolocation) {
-      showGpsError({ message: 'Geolocalización no soportada por este navegador' });
-    } else {
-      showScreen('gps');
+    function startGPS() {
+      if (!navigator.geolocation) {
+        showGpsError({ message: 'Geolocalización no soportada por este navegador' });
+        return;
+      }
+
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           lat = pos.coords.latitude;
@@ -449,6 +874,54 @@
         (err) => showGpsError(err),
         { enableHighAccuracy: true, timeout: 15000 }
       );
+    }
+
+    function animateCountUp(element) {
+      const target = Number(element.dataset.target);
+      const duration = 1200;
+      const startTime = performance.now();
+
+      function updateCount(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const easedProgress = 1 - Math.pow(1 - progress, 3);
+        element.textContent = Math.round(target * easedProgress);
+
+        if (progress < 1) {
+          requestAnimationFrame(updateCount);
+        }
+      }
+
+      requestAnimationFrame(updateCount);
+    }
+
+    function initLandingPage() {
+      landingCtaButton.addEventListener('click', () => {
+        registerSection.scrollIntoView({ behavior: 'smooth' });
+      });
+
+      const statsObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            countUpElements.forEach(animateCountUp);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.35 });
+
+      statsObserver.observe(statsSection);
+    }
+
+    openConfirmButton.addEventListener('click', () => modal.classList.add('is-active'));
+    cancelAlertButton.addEventListener('click', () => modal.classList.remove('is-active'));
+    sendAlertButton.addEventListener('click', sendAlert);
+
+    initLandingPage();
+
+    if (!alias) {
+      showScreen('screen-landing');
+    } else {
+      showScreen('screen-gps');
+      startGPS();
     }
   </script>
 </body>
