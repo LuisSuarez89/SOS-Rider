@@ -843,7 +843,9 @@
     }
 
     function sendAlert() {
-      const url = `https://script.google.com/macros/s/AKfycbyL_KxzatZIGboh8DKRWG9CCI94ONHc85mX-B9Bic8YLcAni9cW6Ldc2s16_ae4dADU-A/exec?alias=${encodeURIComponent(alias)}&lat=${lat}&lon=${lon}&accuracy=${accuracy}`;
+      const TOKEN = "SOS2026#Rider$Col";
+
+      const url = `https://script.google.com/macros/s/AKfycbyL_KxzatZIGboh8DKRWG9CCI94ONHc85mX-B9Bic8YLcAni9cW6Ldc2s16_ae4dADU-A/exec?alias=${encodeURIComponent(alias)}&lat=${lat}&lon=${lon}&accuracy=${accuracy}&token=${encodeURIComponent(TOKEN)}&callback=onAlertSent`;
 
       const script = document.createElement('script');
       script.src = url + '&callback=onAlertSent';
