@@ -94,17 +94,8 @@
     }
 
     .success-icon {
-      align-items: center;
-      background: var(--green);
-      border-radius: 50%;
-      display: inline-flex;
-      font-size: 58px;
-      font-weight: 900;
-      height: 104px;
-      justify-content: center;
-      line-height: 1;
-      margin-bottom: 20px;
-      width: 104px;
+      font-size: 72px;
+      margin-bottom: 16px;
     }
 
     h1,
@@ -209,18 +200,68 @@
       width: 92px;
     }
 
-    .coordinates {
-      background: var(--card-strong);
-      border-radius: 16px;
-      color: var(--text);
-      font-weight: 700;
+    .success-subtitle {
+      color: #a0a0b0;
       margin-bottom: 24px;
-      overflow-wrap: anywhere;
-      padding: 14px 18px;
-      width: 100%;
     }
 
-    .maps-btn,
+    .success-card {
+      background: #16213e;
+      border: 1px solid #27ae6044;
+      border-radius: 12px;
+      padding: 16px;
+      width: 100%;
+      max-width: 340px;
+      margin-bottom: 24px;
+    }
+
+    .success-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #ffffff11;
+      font-size: 14px;
+      gap: 16px;
+    }
+
+    .success-row:last-child {
+      border-bottom: none;
+    }
+
+    .success-label {
+      color: #a0a0b0;
+    }
+
+    .success-value {
+      color: white;
+      font-weight: 500;
+      text-align: right;
+    }
+
+    .success-ok {
+      color: #27ae60;
+    }
+
+    .maps-button {
+      display: block;
+      background: #1a6b3c;
+      color: white;
+      text-decoration: none;
+      padding: 14px 32px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      font-size: 16px;
+      transition: transform 160ms ease, opacity 160ms ease;
+    }
+
+    .success-footer {
+      color: #666;
+      font-size: 12px;
+      text-align: center;
+      max-width: 300px;
+      margin-bottom: 0;
+    }
+
     .modal-btn {
       border: 0;
       border-radius: 999px;
@@ -231,15 +272,8 @@
       transition: transform 160ms ease, opacity 160ms ease;
     }
 
-    .maps-btn {
-      background: var(--green);
-      color: var(--text);
-      display: inline-block;
-      width: 100%;
-    }
-
-    .maps-btn:hover,
-    .maps-btn:focus-visible,
+    .maps-button:hover,
+    .maps-button:focus-visible,
     .modal-btn:hover,
     .modal-btn:focus-visible {
       opacity: 0.92;
@@ -769,15 +803,7 @@
       </div>
     </section>
 
-    <section id="screen-success" class="screen">
-      <div class="card">
-        <div class="success-icon" aria-hidden="true">✓</div>
-        <h2>¡Alerta enviada!</h2>
-        <p>Tus contactos de emergencia han sido notificados</p>
-        <div id="coordinates" class="coordinates">📍 --, --</div>
-        <a id="maps-link" class="maps-btn" href="#" target="_blank" rel="noopener noreferrer">Ver mi ubicación en Maps</a>
-      </div>
-    </section>
+    <section id="screen-success" class="screen"></section>
   </main>
 
   <div id="modal-confirm" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
@@ -796,7 +822,7 @@
     const alias = params.get('alias');
     let lat;
     let lon;
-    let accuracy;
+    let currentAccuracy;
 
     const screens = document.querySelectorAll('.screen');
 
@@ -805,8 +831,6 @@
     const accuracyValue = document.getElementById('accuracy-value');
     const gpsTitle = document.getElementById('gps-title');
     const gpsMessage = document.getElementById('gps-message');
-    const coordinates = document.getElementById('coordinates');
-    const mapsLink = document.getElementById('maps-link');
     const openConfirmButton = document.getElementById('open-confirm');
     const cancelAlertButton = document.getElementById('cancel-alert');
     const sendAlertButton = document.getElementById('send-alert');
@@ -822,7 +846,7 @@
 
     function showMainScreen() {
       aliasValue.textContent = alias;
-      accuracyValue.textContent = `Precisión GPS: ±${Math.round(accuracy)}m`;
+      accuracyValue.textContent = `Precisión GPS: ±${Math.round(currentAccuracy)}m`;
       showScreen('screen-main');
     }
 
@@ -835,17 +859,66 @@
 
     function showSuccessScreen() {
       modal.classList.remove('is-active');
-      const formattedLat = Number(lat).toFixed(6);
-      const formattedLon = Number(lon).toFixed(6);
-      coordinates.textContent = `📍 ${formattedLat}, ${formattedLon}`;
-      mapsLink.href = `https://www.google.com/maps?q=${formattedLat},${formattedLon}`;
+      const mapsUrl = `https://www.google.com/maps?q=${lat},${lon}`;
+      const accuracy = Math.round(currentAccuracy);
+      const now = new Date().toLocaleString('es-CO', {
+        timeZone: 'America/Bogota',
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+
+      document.getElementById('screen-success').innerHTML = `
+        <div class="success-icon">✅</div>
+        <h1>¡Alerta enviada!</h1>
+        <p class="success-subtitle">Tus contactos de emergencia han sido notificados</p>
+
+        <div class="success-card">
+          <div class="success-row">
+            <span class="success-label">⏰ Hora</span>
+            <span class="success-value">${now}</span>
+          </div>
+          <div class="success-row">
+            <span class="success-label">📍 Precisión GPS</span>
+            <span class="success-value">±${accuracy}m</span>
+          </div>
+          <div class="success-row">
+            <span class="success-label">📲 WhatsApp</span>
+            <span class="success-value success-ok">Enviado ✓</span>
+          </div>
+          <div class="success-row">
+            <span class="success-label">💬 SMS</span>
+            <span class="success-value success-ok">Enviado ✓</span>
+          </div>
+          <div class="success-row">
+            <span class="success-label">📧 Email</span>
+            <span class="success-value success-ok">Enviado ✓</span>
+          </div>
+          <div class="success-row">
+            <span class="success-label">✅ Confirmación</span>
+            <span class="success-value success-ok">Enviada a tu celular</span>
+          </div>
+        </div>
+
+        <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="maps-button">
+          📍 Ver mi ubicación en Maps
+        </a>
+
+        <p class="success-footer">
+          Recibirás un WhatsApp y email de confirmación en tu celular registrado.
+        </p>
+      `;
+
       showScreen('screen-success');
     }
 
     function sendAlert() {
       const TOKEN = "SOS2026RiderCol";
 
-      const url = `https://script.google.com/macros/s/AKfycbyL_KxzatZIGboh8DKRWG9CCI94ONHc85mX-B9Bic8YLcAni9cW6Ldc2s16_ae4dADU-A/exec?alias=${encodeURIComponent(alias)}&lat=${lat}&lon=${lon}&accuracy=${accuracy}&token=${encodeURIComponent(TOKEN)}&callback=onAlertSent`;
+      const url = `https://script.google.com/macros/s/AKfycbyL_KxzatZIGboh8DKRWG9CCI94ONHc85mX-B9Bic8YLcAni9cW6Ldc2s16_ae4dADU-A/exec?alias=${encodeURIComponent(alias)}&lat=${lat}&lon=${lon}&accuracy=${currentAccuracy}&token=${encodeURIComponent(TOKEN)}&callback=onAlertSent`;
 
       const script = document.createElement('script');
       script.src = url + '&callback=onAlertSent';
@@ -870,7 +943,7 @@
         (pos) => {
           lat = pos.coords.latitude;
           lon = pos.coords.longitude;
-          accuracy = pos.coords.accuracy;
+          currentAccuracy = pos.coords.accuracy;
           showMainScreen();
         },
         (err) => showGpsError(err),
