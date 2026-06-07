@@ -2,7 +2,9 @@
 
 SOS Rider Colombia es una aplicación web estática para emergencias de motociclistas. Al abrir un enlace o escanear un QR con el alias del piloto, la app solicita la ubicación GPS del teléfono y permite enviar una alerta SOS con latitud, longitud y precisión a los contactos de emergencia registrados.
 
-La aplicación no usa frameworks, dependencias ni proceso de compilación: todo vive en `index.html` y se publica con GitHub Pages.
+La aplicación no usa frameworks ni dependencias externas, pero está **modularizada** en archivos CSS y JavaScript separados para mejor mantenibilidad. Se publica con GitHub Pages.
+
+**Ver [ARCHITECTURE.md](./ARCHITECTURE.md) para detalles de la estructura modular del proyecto.**
 
 ## Cómo funciona
 
@@ -96,9 +98,26 @@ function doGet(e) {
 ## Estructura del repositorio
 
 ```text
-index.html
-.github/workflows/deploy.yml
-README.md
+SOS-Rider/
+├── index.html              # HTML limpio (solo estructura)
+├── css/                    # Estilos modularizados
+│   ├── variables.css       # Variables CSS
+│   ├── base.css            # Estilos base
+│   ├── layout.css          # Sistema de layouts
+│   ├── components.css      # Componentes
+│   ├── animations.css      # Animaciones
+│   └── landing.css         # Landing page
+├── js/                     # Módulos JavaScript
+│   ├── constants.js        # Constantes y selectores
+│   ├── geolocation.js      # Geolocalización
+│   ├── ui.js               # Gestión de UI
+│   ├── alerts.js           # Envío de alertas
+│   ├── animations.js       # Animaciones
+│   └── app.js              # Coordinador principal
+├── .github/workflows/deploy.yml
+├── README.md
+├── ARCHITECTURE.md         # Documentación de arquitectura
+└── .gitignore
 ```
 
 ## Publicación en GitHub Pages

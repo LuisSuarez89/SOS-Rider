@@ -1,0 +1,100 @@
+.sos-btn {
+  align-items: center;
+  animation: pulse 2s infinite;
+  background: var(--red);
+  border: 0;
+  border-radius: 50%;
+  box-shadow: 0 16px 36px rgba(231, 76, 60, 0.28);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  font-size: 1.45rem;
+  font-weight: 900;
+  gap: 8px;
+  height: 220px;
+  justify-content: center;
+  line-height: 1.15;
+  margin-bottom: 28px;
+  padding: 24px;
+  text-transform: uppercase;
+  transition: transform 160ms ease, background 160ms ease;
+  width: 220px;
+}
+
+.sos-btn:hover,
+.sos-btn:focus-visible {
+  background: var(--red-dark);
+  transform: scale(1.03);
+}
+
+.sos-btn:active {
+  transform: scale(0.98);
+}
+
+.landing-cta,
+.register-btn {
+  background: var(--red);
+  border: 0;
+  border-radius: 999px;
+  color: var(--text);
+  cursor: pointer;
+  display: inline-flex;
+  font-weight: 900;
+  padding: 16px 28px;
+  text-decoration: none;
+  transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
+}
+
+.landing-cta:hover,
+.landing-cta:focus-visible,
+.register-btn:hover,
+.register-btn:focus-visible {
+  background: var(--red-dark);
+  box-shadow: 0 12px 28px rgba(231, 76, 60, 0.26);
+  transform: translateY(-2px);
+}
+
+.maps-button {
+  display: block;
+  background: #1a6b3c;
+  color: white;
+  text-decoration: none;
+  padding: 14px 32px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  font-size: 16px;
+  transition: transform 160ms ease, opacity 160ms ease;
+}
+
+.maps-button:hover,
+.maps-button:focus-visible {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.modal-btn {
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 800;
+  padding: 14px 20px;
+  text-decoration: none;
+  transition: transform 160ms ease, opacity 160ms ease;
+}
+
+.modal-btn:hover,
+.modal-btn:focus-visible {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.btn-cancel {
+  background: #6c757d;
+  color: var(--text);
+}
+
+.btn-send {
+  background: var(--red);
+  color: var(--text);
+}
