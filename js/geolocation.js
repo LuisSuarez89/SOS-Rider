@@ -27,11 +27,13 @@ function getErrorMessage(err) {
 
 function startGPS() {
   if (!navigator.geolocation) {
+    console.error('❌ Geolocation API not available');
     UI.showGpsError({ message: 'Geolocalización no soportada por este navegador' });
     return;
   }
 
   gpsAttempts++;
+  console.log(`📍 Getting GPS position (attempt ${gpsAttempts}/${MAX_GPS_ATTEMPTS})`);
   
   navigator.geolocation.getCurrentPosition(
     (pos) => {
@@ -39,15 +41,18 @@ function startGPS() {
       lon = pos.coords.longitude;
       currentAccuracy = pos.coords.accuracy;
       gpsAttempts = 0; // Reset attempts on success
+      console.log(`✅ GPS Success: ${lat.toFixed(4)}, ${lon.toFixed(4)} (±${Math.round(currentAccuracy)}m)`);
       UI.showMainScreen(currentAlias);
     },
     (err) => {
       const errorMsg = getErrorMessage(err);
+      console.error(`❌ GPS Error (code ${err.code}): ${errorMsg}`);
       
       // Check if it's a permission error on iOS
       const isPermissionError = err && (err.code === 1 || err.code === 2 || err.code === 3);
       
       if (gpsAttempts < MAX_GPS_ATTEMPTS && isPermissionError) {
+        console.log(`🔄 Can retry: ${gpsAttempts} of ${MAX_GPS_ATTEMPTS}`);
         // Show error but offer retry
         UI.showGpsError({ 
           message: errorMsg,
@@ -55,6 +60,7 @@ function startGPS() {
           attempts: gpsAttempts
         });
       } else {
+        console.log('❌ Max retries reached or non-retryable error');
         // Final error
         UI.showGpsError({ message: errorMsg });
       }
@@ -69,6 +75,7 @@ function startGPS() {
 
 function retryGPS() {
   if (gpsAttempts < MAX_GPS_ATTEMPTS) {
+    console.log(`🔄 Retrying GPS (${gpsAttempts}/${MAX_GPS_ATTEMPTS})`);
     startGPS();
   }
 }

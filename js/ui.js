@@ -11,13 +11,16 @@ const UI = (() => {
   };
 
   function showScreen(screenId) {
+    console.log('📺 Showing screen:', screenId);
     elements.screens.forEach((screen) => screen.classList.remove('is-active'));
     document.getElementById(screenId).classList.add('is-active');
   }
 
   function showMainScreen(alias) {
+    const accuracy = Math.round(Geolocation.getAccuracy());
+    console.log(`📍 Main screen - Alias: ${alias}, Accuracy: ±${accuracy}m`);
     elements.aliasValue.textContent = alias;
-    elements.accuracyValue.textContent = `Precisión GPS: ±${Math.round(Geolocation.getAccuracy())}m`;
+    elements.accuracyValue.textContent = `Precisión GPS: ±${accuracy}m`;
     showScreen(SCREEN_MAIN);
   }
 
@@ -25,6 +28,7 @@ const UI = (() => {
     const detail = err && err.message ? err.message : '';
     const canRetry = err && err.canRetry;
     
+    console.log('⚠️ GPS Error screen shown:', detail);
     elements.gpsTitle.textContent = 'No fue posible obtener la ubicación GPS';
     elements.gpsMessage.innerHTML = `
       <div>${detail}</div>
@@ -37,7 +41,10 @@ const UI = (() => {
       setTimeout(() => {
         const retryBtn = document.getElementById('gps-retry-btn');
         if (retryBtn) {
-          retryBtn.addEventListener('click', () => Geolocation.retryGPS());
+          retryBtn.addEventListener('click', () => {
+            console.log('🔄 User clicked retry button');
+            Geolocation.retryGPS();
+          });
         }
       }, 100);
     }
@@ -57,6 +64,7 @@ const UI = (() => {
       second: '2-digit'
     });
 
+    console.log('✅ Success screen - Alert sent for:', alias);
     elements.successScreen.innerHTML = `
       <div class="success-icon">✅</div>
       <h1>¡Alerta enviada!</h1>
@@ -102,10 +110,12 @@ const UI = (() => {
   }
 
   function openConfirmModal() {
+    console.log('📋 Opening confirmation modal');
     elements.modal.classList.add('is-active');
   }
 
   function closeConfirmModal() {
+    console.log('❌ Closing confirmation modal');
     elements.modal.classList.remove('is-active');
   }
 
