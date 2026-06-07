@@ -22,10 +22,25 @@ const UI = (() => {
   }
 
   function showGpsError(err) {
-    const detail = err && err.message ? ` ${err.message}` : '';
+    const detail = err && err.message ? err.message : '';
+    const canRetry = err && err.canRetry;
+    
     elements.gpsTitle.textContent = 'No fue posible obtener la ubicación GPS';
-    elements.gpsMessage.textContent = `Revisa los permisos de ubicación y vuelve a abrir el QR.${detail}`;
+    elements.gpsMessage.innerHTML = `
+      <div>${detail}</div>
+      ${canRetry ? '<div style="margin-top: 16px; font-size: 14px; color: #999;">Intento ' + err.attempts + ' de ' + 3 + '</div>' : ''}
+      ${canRetry ? '<button id="gps-retry-btn" class="retry-btn" style="margin-top: 16px; padding: 8px 16px; background: #e63946; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Reintentar</button>' : ''}
+    `;
     showScreen(SCREEN_GPS);
+    
+    if (canRetry) {
+      setTimeout(() => {
+        const retryBtn = document.getElementById('gps-retry-btn');
+        if (retryBtn) {
+          retryBtn.addEventListener('click', () => Geolocation.retryGPS());
+        }
+      }, 100);
+    }
   }
 
   function showSuccessScreen(alias) {
