@@ -1,125 +1,24 @@
 # SOS Rider Colombia
 
-SOS Rider Colombia es una aplicación web estática para emergencias de motociclistas. Al abrir un enlace o escanear un QR con el alias del piloto, la app solicita la ubicación GPS del teléfono y permite enviar una alerta SOS con latitud, longitud y precisión a los contactos de emergencia registrados.
+SOS Rider Colombia es una aplicación web de apoyo para emergencias de motociclistas. Permite que, al escanear un código QR asociado a un rider, se pueda iniciar una alerta con la ubicación aproximada del dispositivo y notificar a sus contactos de emergencia.
 
-La aplicación no usa frameworks ni dependencias externas, pero está **modularizada** en archivos CSS y JavaScript separados para mejor mantenibilidad. Se publica con GitHub Pages.
+Este repositorio se mantiene público únicamente porque el sitio se publica mediante GitHub Pages. La documentación se limita a una descripción general del proyecto y no incluye instrucciones de configuración, arquitectura interna ni detalles de implementación.
 
-**Ver [ARCHITECTURE.md](./ARCHITECTURE.md) para detalles de la estructura modular del proyecto.**
+## Objetivo
 
-## Cómo funciona
+El proyecto busca ofrecer un punto de contacto rápido en caso de accidente, incidente en ruta o situación de emergencia. Está pensado para que un tercero pueda escanear el QR del rider y activar una alerta de auxilio desde un teléfono móvil.
 
-1. El piloto o acompañante abre el enlace del QR con el parámetro `alias`.
-2. La app pide permiso para obtener la ubicación GPS del dispositivo.
-3. Cuando el GPS está listo, se muestra el botón rojo **ENVIAR ALERTA SOS**.
-4. Antes de enviar, la app solicita confirmación.
-5. Al confirmar, se envía la alerta al endpoint de Google Apps Script y se muestra la pantalla de éxito con un enlace para ver la ubicación en Google Maps.
+## Uso previsto
 
-## Registrar un nuevo rider
+- El rider debe contar con un QR asignado previamente.
+- En caso de emergencia, una persona puede escanear el QR desde un celular.
+- La aplicación solicitará permisos de ubicación para poder incluir una referencia geográfica en la alerta.
+- La alerta será enviada a los contactos configurados para ese rider.
 
-Registra cada piloto en el formulario de Google configurado para el proyecto:
+## Estado del proyecto
 
-[Registro SOS Rider](https://forms.gle/eVotSEsrQuvvetvJ6)
+Proyecto personal en uso y mantenimiento privado. No está pensado como plantilla, producto instalable ni solución lista para ser replicada por terceros.
 
-Incluye como mínimo:
+## Privacidad y responsabilidad
 
-- Alias único del piloto.
-- Nombre del piloto.
-- Contactos de emergencia.
-- Números de WhatsApp con indicativo de país.
-
-## Generar un QR para un rider
-
-Cada QR debe apuntar a la URL pública de GitHub Pages con el alias del piloto:
-
-```text
-https://luissuarez89.github.io/SOS-Rider/?alias=ALIAS
-```
-
-Ejemplo para un piloto de prueba:
-
-```text
-https://luissuarez89.github.io/SOS-Rider/?alias=alias_de_prueba
-```
-
-Pasos recomendados:
-
-1. Define un alias corto, único y fácil de identificar.
-2. Sustituye `ALIAS` en la URL por el alias real del piloto.
-3. Genera el código QR con cualquier generador confiable.
-4. Imprime y pega el QR en el casco, moto, carnet o kit de emergencia.
-5. Prueba el QR desde un celular antes de entregarlo.
-
-## Activar alertas por WhatsApp con CallMeBot
-
-CallMeBot permite enviar mensajes de WhatsApp desde una URL. Para activar las alertas:
-
-1. Agrega el número oficial de CallMeBot a tus contactos de WhatsApp. Consulta el número y las instrucciones actualizadas en [CallMeBot WhatsApp API](https://www.callmebot.com/blog/free-api-whatsapp-messages/).
-2. Envía el mensaje de activación indicado por CallMeBot desde el WhatsApp que recibirá alertas.
-3. CallMeBot responderá con una `apikey`.
-4. Guarda para cada contacto:
-   - Teléfono en formato internacional, por ejemplo `+573001112233`.
-   - `apikey` entregada por CallMeBot.
-5. Configura el Google Apps Script para que, al recibir `alias`, `lat`, `lon` y `accuracy`, busque los contactos del piloto y llame la URL de CallMeBot con el mensaje de emergencia.
-
-Mensaje sugerido:
-
-```text
-🚨 SOS Rider Colombia: emergencia de ALIAS. Ubicación: https://www.google.com/maps?q=LAT,LON Precisión GPS: ±ACCURACY m
-```
-
-
-## Google Apps Script compatible con JSONP
-
-Para que el endpoint de Google Apps Script acepte la llamada JSONP desde la app, usa este `doGet`:
-
-```javascript
-function doGet(e) {
-  try {
-    var payload = {
-      alias:    (e.parameter.alias    || "").toString().trim().toLowerCase(),
-      lat:      parseFloat(e.parameter.lat)  || 0,
-      lon:      parseFloat(e.parameter.lon)  || 0,
-      accuracy: parseFloat(e.parameter.accuracy) || null,
-    };
-    var result = procesarAlerta(payload);
-    var callback = e.parameter.callback;
-    if (callback) {
-      return ContentService
-        .createTextOutput(callback + '(' + result.getContent() + ')')
-        .setMimeType(ContentService.MimeType.JAVASCRIPT);
-    }
-    return result;
-  } catch(err) {
-    return jsonResponse({ ok: false, error: err.message });
-  }
-}
-```
-
-## Estructura del repositorio
-
-```text
-SOS-Rider/
-├── index.html              # HTML limpio (solo estructura)
-├── css/                    # Estilos modularizados
-│   ├── variables.css       # Variables CSS
-│   ├── base.css            # Estilos base
-│   ├── layout.css          # Sistema de layouts
-│   ├── components.css      # Componentes
-│   ├── animations.css      # Animaciones
-│   └── landing.css         # Landing page
-├── js/                     # Módulos JavaScript
-│   ├── constants.js        # Constantes y selectores
-│   ├── geolocation.js      # Geolocalización
-│   ├── ui.js               # Gestión de UI
-│   ├── alerts.js           # Envío de alertas
-│   ├── animations.js       # Animaciones
-│   └── app.js              # Coordinador principal
-├── .github/workflows/deploy.yml
-├── README.md
-├── ARCHITECTURE.md         # Documentación de arquitectura
-└── .gitignore
-```
-
-## Publicación en GitHub Pages
-
-El workflow `.github/workflows/deploy.yml` publica el contenido del repositorio en GitHub Pages cuando se hace push a la rama `main`.
+SOS Rider Colombia es una herramienta de apoyo y no reemplaza los servicios oficiales de emergencia. La precisión de la ubicación depende del dispositivo, el navegador, la señal GPS y las condiciones de red disponibles al momento de activar la alerta.
