@@ -7,8 +7,26 @@ const UI = (() => {
     accuracyValue: document.getElementById(selectors.accuracyValue.slice(1)),
     gpsTitle: document.getElementById(selectors.gpsTitle.slice(1)),
     gpsMessage: document.getElementById(selectors.gpsMessage.slice(1)),
-    successScreen: document.getElementById(selectors.successScreen.slice(1))
+    successScreen: document.getElementById(selectors.successScreen.slice(1)),
+    contactLinksContainer: document.getElementById(selectors.contactLinksContainer.slice(1))
   };
+
+  function renderContactLinks() {
+    if (!elements.contactLinksContainer || !Array.isArray(CONTACT_LINKS)) {
+      return;
+    }
+
+    elements.contactLinksContainer.innerHTML = CONTACT_LINKS.map((link) => {
+      const channelClass = link.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+      return `
+        <a class="contact-link contact-link--${channelClass}" href="${link.url}" target="_blank" rel="noopener noreferrer" aria-label="${link.label}">
+          <span class="contact-link-icon" aria-hidden="true">${link.icon}</span>
+          <span>${link.name}</span>
+        </a>
+      `;
+    }).join('');
+  }
 
   function showScreen(screenId) {
     console.log('📺 Showing screen:', screenId);
@@ -125,6 +143,7 @@ const UI = (() => {
     showGpsError,
     showSuccessScreen,
     openConfirmModal,
-    closeConfirmModal
+    closeConfirmModal,
+    renderContactLinks
   };
 })();

@@ -37,6 +37,9 @@ const App = (() => {
     // Initialize event listeners
     setupEventListeners();
 
+    // Render configurable contact/social links
+    UI.renderContactLinks();
+
     // Initialize landing page animations
     Animations.initSmoothScroll();
     Animations.initCountUpObserver();
