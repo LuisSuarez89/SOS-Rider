@@ -1,0 +1,19 @@
+name: Generate Carnet
+on:
+  repository_dispatch:
+    types: [generate_carnet]
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: pip install -r carnet_generator/requirements.txt
+      - run: python carnet_generator/generate.py
+        env:
+          PILOT_DATA:         ${{ toJSON(github.event.client_payload) }}
+          TEMPLATE_ID:        ${{ secrets.TEMPLATE_ID }}
+          FOLDER_ID:          ${{ secrets.FOLDER_ID }}
+          GDRIVE_CREDENTIALS: ${{ secrets.GDRIVE_CREDENTIALS }}

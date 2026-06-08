@@ -1,0 +1,5 @@
+pillow
+qrcode[pil]
+google-auth
+google-api-python-client
+requests
