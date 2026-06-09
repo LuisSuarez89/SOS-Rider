@@ -1,27 +1,28 @@
 #!/usr/bin/env python3
-"""Generate a pilot carnet image and upload it to Google Drive.
+"""Generate a pilot carnet image and upload it to GitHub.
 
 The script is intended to run from GitHub Actions. It receives pilot data as a
 JSON string in PILOT_DATA, downloads a template image from Google Drive using a
 service account, renders a QR code and pilot fields over the template, uploads
-resulting JPEG to Drive, and prints the public file URL.
+the resulting JPEG to the repository's carnets branch, and prints the raw URL.
 """
 
 from __future__ import annotations
 
+import base64
 import io
 import json
 import os
 import re
-import sys
 import tempfile
 from pathlib import Path
 from typing import Any
 
 import qrcode
+import requests
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
+from googleapiclient.http import MediaIoBaseDownload
 from PIL import Image, ImageDraw, ImageFont
 
 QR_ZONA = {"x1": 320, "y1": 420, "x2": 1078, "y2": 1020}
@@ -32,7 +33,6 @@ ALERGIAS_ZONA = {"x1": 430, "y1": 1170, "x2": 930, "y2": 1213}
 CANVAS_SIZE = (1254, 1254)
 SCOPES = ["https://www.googleapis.com/auth/drive"]
 TEXT_FILL = (0, 0, 0)
-OUTPUT_MIME_TYPE = "image/jpeg"
 
 
 def require_env(name: str) -> str:
@@ -184,37 +184,49 @@ def safe_filename(data: dict[str, Any]) -> str:
     return f"carnet-{slug}.jpg"
 
 
-def upload_to_drive(service, image_path: str, folder_id: str, filename: str) -> str:
-    metadata = {
-        "name": filename,
-        "parents": [folder_id],
+def upload_to_github_release(image_path: str, filename: str) -> str:
+    """Upload file to GitHub repo via Contents API and return raw URL."""
+    token = require_env("GITHUB_TOKEN")
+    repo = require_env("GITHUB_REPOSITORY")
+    branch = "carnets"
+
+    with open(image_path, "rb") as file:
+        content = base64.b64encode(file.read()).decode()
+
+    api_url = f"https://api.github.com/repos/{repo}/contents/carnets/{filename}"
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/vnd.github.v3+json",
     }
-    media = MediaFileUpload(image_path, mimetype=OUTPUT_MIME_TYPE, resumable=False)
-    uploaded = service.files().create(
-        body=metadata,
-        media_body=media,
-        fields="id, webViewLink",
-    ).execute()
 
-    file_id = uploaded["id"]
-    try:
-        service.permissions().create(
-            fileId=file_id,
-            body={"type": "anyone", "role": "reader"},
-            fields="id",
-        ).execute()
-    except Exception as exc:  # noqa: BLE001 - keep the generated URL usable if folder policy already handles sharing.
-        print(f"Warning: could not set public sharing permission: {exc}", file=sys.stderr)
+    get_resp = requests.get(api_url, headers=headers, params={"ref": branch}, timeout=30)
+    if get_resp.status_code == 200:
+        sha = get_resp.json().get("sha")
+    elif get_resp.status_code == 404:
+        sha = None
+    else:
+        get_resp.raise_for_status()
+        sha = None
 
-    file = service.files().get(fileId=file_id, fields="webViewLink").execute()
-    return file.get("webViewLink") or f"https://drive.google.com/file/d/{file_id}/view"
+    payload = {
+        "message": f"carnet: {filename}",
+        "content": content,
+        "branch": branch,
+    }
+    if sha:
+        payload["sha"] = sha
+
+    put_resp = requests.put(api_url, headers=headers, json=payload, timeout=30)
+    put_resp.raise_for_status()
+
+    raw_url = f"https://raw.githubusercontent.com/{repo}/{branch}/carnets/{filename}"
+    print(f"Carnet URL: {raw_url}")
+    return raw_url
 
 
 def main() -> None:
     data = load_pilot_data()
     template_id = require_env("TEMPLATE_ID")
-    folder_id = require_env("FOLDER_ID")
-
     service = load_drive_service()
     template = download_template(service, template_id)
     carnet = render_carnet(template, data)
@@ -222,7 +234,7 @@ def main() -> None:
     with tempfile.TemporaryDirectory() as temp_dir:
         output_path = Path(temp_dir) / safe_filename(data)
         carnet.save(output_path, format="JPEG", quality=95, optimize=True)
-        file_url = upload_to_drive(service, str(output_path), folder_id, output_path.name)
+        file_url = upload_to_github_release(str(output_path), output_path.name)
 
     print(file_url)
 
