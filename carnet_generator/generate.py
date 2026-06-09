@@ -224,6 +224,25 @@ def upload_to_github_release(image_path: str, filename: str) -> str:
     return raw_url
 
 
+def notificar_webhook(webhook_url: str, alias: str, carnet_url: str, token: str):
+    """Send carnet URL back to Apps Script webhook."""
+    import urllib.parse
+    import urllib.request
+
+    params = urllib.parse.urlencode({
+        "action": "carnet_ready",
+        "alias": alias,
+        "url": carnet_url,
+        "token": token,
+    })
+    full_url = f"{webhook_url}?{params}"
+    try:
+        req = urllib.request.urlopen(full_url, timeout=15)
+        print(f"Webhook notified: HTTP {req.status}")
+    except Exception as e:
+        print(f"Webhook notification failed (non-critical): {e}")
+
+
 def main() -> None:
     data = load_pilot_data()
     template_id = require_env("TEMPLATE_ID")
@@ -235,6 +254,11 @@ def main() -> None:
         output_path = Path(temp_dir) / safe_filename(data)
         carnet.save(output_path, format="JPEG", quality=95, optimize=True)
         file_url = upload_to_github_release(str(output_path), output_path.name)
+
+    webhook_url = os.environ.get("WEBHOOK_URL", "")
+    token = os.environ.get("TOKEN_SECRETO", "")
+    if webhook_url:
+        notificar_webhook(webhook_url, data["alias"], file_url, token)
 
     print(file_url)
 
