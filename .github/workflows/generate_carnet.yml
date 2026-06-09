@@ -2,6 +2,10 @@ name: Generate Carnet
 on:
   repository_dispatch:
     types: [generate_carnet]
+
+permissions:
+  contents: write
+
 jobs:
   generate:
     runs-on: ubuntu-latest
@@ -11,9 +15,20 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install -r carnet_generator/requirements.txt
+      - name: Setup carnets branch
+        run: |
+          git fetch origin carnets 2>/dev/null || {
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git checkout --orphan carnets
+            git rm -rf .
+            git commit --allow-empty -m "Initialize carnets branch"
+            git push origin carnets
+          }
+          git checkout ${{ github.sha }}
       - run: python carnet_generator/generate.py
         env:
           PILOT_DATA:         ${{ toJSON(github.event.client_payload) }}
           TEMPLATE_ID:        ${{ secrets.TEMPLATE_ID }}
-          FOLDER_ID:          ${{ secrets.FOLDER_ID }}
           GDRIVE_CREDENTIALS: ${{ secrets.GDRIVE_CREDENTIALS }}
+          GITHUB_TOKEN:       ${{ secrets.GITHUB_TOKEN }}
