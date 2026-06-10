@@ -228,20 +228,21 @@ def upload_to_github_release(image_path: str, filename: str) -> str:
 def notificar_webhook(webhook_url: str, alias: str, carnet_url: str, token: str):
     """Send carnet URL back to Apps Script webhook."""
     import urllib.parse
-    import urllib.request
+    import requests
 
-    params = urllib.parse.urlencode({
+    params = {
         "action": "carnet_ready",
         "alias": alias,
         "url": carnet_url,
         "token": token,
-    })
-    full_url = f"{webhook_url}?{params}"
+    }
+    full_url = f"{webhook_url}?{urllib.parse.urlencode(params)}"
+    print(f"Calling webhook: {full_url}")
     try:
-        req = urllib.request.urlopen(full_url, timeout=15)
-        print(f"Webhook notified: HTTP {req.status}")
-    except Exception as e:
-        print(f"Webhook notification failed (non-critical): {e}")
+        resp = requests.get(full_url, timeout=15, allow_redirects=True)
+        print(f"Webhook HTTP {resp.status_code}: {resp.text[:300]}")
+    except Exception as ex:
+        print(f"Webhook error: {ex}")
 
 
 def main() -> None:
@@ -257,9 +258,18 @@ def main() -> None:
         file_url = upload_to_github_release(str(output_path), output_path.name)
 
     webhook_url = os.environ.get("WEBHOOK_URL", "")
-    token = os.environ.get("TOKEN_SECRETO", "")
-    if webhook_url:
-        notificar_webhook(webhook_url, data["alias"], file_url, token)
+    token_secreto = os.environ.get("TOKEN_SECRETO", "")
+    pilot_alias = data.get("alias", "")
+
+    print(f"WEBHOOK_URL: {webhook_url}")
+    print(f"TOKEN_SECRETO set: {'yes' if token_secreto else 'NO - MISSING'}")
+    print(f"alias: {pilot_alias}")
+    print(f"carnet_url: {file_url}")
+
+    if webhook_url and token_secreto:
+        notificar_webhook(webhook_url, pilot_alias, file_url, token_secreto)
+    else:
+        print("WARNING: webhook not called — missing WEBHOOK_URL or TOKEN_SECRETO")
 
     print(file_url)
 
