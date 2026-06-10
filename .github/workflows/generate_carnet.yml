@@ -33,4 +33,4 @@ jobs:
           GDRIVE_CREDENTIALS: ${{ secrets.GDRIVE_CREDENTIALS }}
           GITHUB_TOKEN:       ${{ secrets.GITHUB_TOKEN }}
           WEBHOOK_URL:        ${{ github.event.client_payload.webhook_url }}
-          TOKEN_SECRETO:      ${{ github.event.client_payload.token }}
+          TOKEN_SECRETO:      ${{ secrets.TOKEN_SECRETO }}
