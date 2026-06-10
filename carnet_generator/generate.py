@@ -13,7 +13,6 @@ import base64
 import io
 import json
 import os
-import re
 import tempfile
 from pathlib import Path
 from typing import Any
@@ -178,16 +177,18 @@ def render_carnet(template: Image.Image, data: dict[str, Any]) -> Image.Image:
     return image
 
 
-def safe_filename(data: dict[str, Any]) -> str:
-    alias = get_first(data, ("alias", "apodo", "nickname", "pilot_alias", "pilotAlias"), "piloto")
-    slug = re.sub(r"[^a-zA-Z0-9_-]+", "-", alias).strip("-").lower() or "piloto"
-    return f"carnet-{slug}.jpg"
+def sanitize_filename(alias: str) -> str:
+    """Convert alias to filename: lowercase, spaces and underscores become hyphens."""
+    name = alias.lower().strip()
+    name = name.replace(" ", "-").replace("_", "-")
+    name = "".join(c for c in name if c.isalnum() or c == "-") or "piloto"
+    return f"carnet-{name}.jpg"
 
 
 def upload_to_github_release(image_path: str, filename: str) -> str:
     """Upload file to GitHub repo via Contents API and return raw URL."""
     token = require_env("GITHUB_TOKEN")
-    repo = require_env("GITHUB_REPOSITORY")
+    repo = os.environ["GITHUB_REPOSITORY"]
     branch = "carnets"
 
     with open(image_path, "rb") as file:
@@ -219,7 +220,7 @@ def upload_to_github_release(image_path: str, filename: str) -> str:
     put_resp = requests.put(api_url, headers=headers, json=payload, timeout=30)
     put_resp.raise_for_status()
 
-    raw_url = f"https://raw.githubusercontent.com/{repo}/{branch}/carnets/{filename}"
+    raw_url = f"https://raw.githubusercontent.com/{repo}/refs/heads/{branch}/carnets/{filename}"
     print(f"Carnet URL: {raw_url}")
     return raw_url
 
@@ -251,7 +252,7 @@ def main() -> None:
     carnet = render_carnet(template, data)
 
     with tempfile.TemporaryDirectory() as temp_dir:
-        output_path = Path(temp_dir) / safe_filename(data)
+        output_path = Path(temp_dir) / sanitize_filename(data["alias"])
         carnet.save(output_path, format="JPEG", quality=95, optimize=True)
         file_url = upload_to_github_release(str(output_path), output_path.name)
 
