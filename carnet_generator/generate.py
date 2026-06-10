@@ -188,7 +188,9 @@ def sanitize_filename(alias: str) -> str:
 def upload_to_github_release(image_path: str, filename: str) -> str:
     """Upload file to GitHub repo via Contents API and return raw URL."""
     token = require_env("GITHUB_TOKEN")
-    repo = os.environ["GITHUB_REPOSITORY"]
+    # GITHUB_REPOSITORY env var uses lowercase owner ("luissuarez89/SOS-Rider")
+    # but the actual repo has mixed case — hardcode to avoid 404 on GET and 409 on PUT
+    repo  = "LuisSuarez89/SOS-Rider"
     branch = "carnets"
 
     with open(image_path, "rb") as file:
@@ -200,17 +202,21 @@ def upload_to_github_release(image_path: str, filename: str) -> str:
         "Accept": "application/vnd.github.v3+json",
     }
 
+    # Always fetch existing SHA — required to update a file that already exists.
+    # Without SHA the PUT returns 409 Conflict on subsequent runs.
     get_resp = requests.get(api_url, headers=headers, params={"ref": branch}, timeout=30)
     if get_resp.status_code == 200:
         sha = get_resp.json().get("sha")
+        print(f"File exists, will update (sha: {sha[:7]}...)")
     elif get_resp.status_code == 404:
         sha = None
+        print("File does not exist, will create")
     else:
-        get_resp.raise_for_status()
+        print(f"Warning: GET returned HTTP {get_resp.status_code}, proceeding without sha")
         sha = None
 
     payload = {
-        "message": f"carnet: {filename}",
+        "message": f"carnet: update {filename}",
         "content": content,
         "branch": branch,
     }
