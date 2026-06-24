@@ -122,6 +122,14 @@ const UI = (() => {
       <p class="success-footer">
         Recibirás un WhatsApp y email de confirmación en tu celular registrado.
       </p>
+
+      <div class="success-ad">
+        <h2>Tu compañero de ruta ya está listo</h2>
+        <p>Instala Parche Moto y lleva en tu Android mapas, consejos y todo lo necesario para rodar con confianza.</p>
+        <a class="promo-btn" href="https://play.google.com/store/apps/details?id=com.zerausk.parchemoto&pcampaignid=web_share" target="_blank" rel="noopener noreferrer">
+          <img src="resources/vecteezy_google-play-store-download-button-in-white-colors-download_12871364.png" alt="Descargar de Play Store" class="promo-btn__icon">
+        </a>
+      </div>
     `;
 
     showScreen(SCREEN_SUCCESS);
