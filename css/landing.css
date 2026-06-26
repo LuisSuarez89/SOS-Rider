@@ -251,6 +251,21 @@
   margin-bottom: 6px;
 }
 
+.landing-footer .footer-links {
+  margin: 8px 0 0;
+  font-size: 0.95rem;
+}
+
+.landing-footer .footer-links a {
+  color: rgba(255, 255, 255, 0.88);
+  text-decoration: none;
+}
+
+.landing-footer .footer-links a:hover,
+.landing-footer .footer-links a:focus {
+  text-decoration: underline;
+}
+
 .landing-footer small {
   color: var(--muted);
   font-size: 0.95rem;
