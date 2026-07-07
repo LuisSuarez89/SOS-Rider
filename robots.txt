@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://luissuarez89.github.io/SOS-Rider/sitemap.xml
